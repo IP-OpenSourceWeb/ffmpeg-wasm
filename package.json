@@ -3,10 +3,17 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "ffmpeg:clone": "git clone https://github.com/FFmpeg/FFmpeg.git ./ffmpeg",
+    "install:deps": "node ./scripts/install-dependencies.js",
     "ffmpeg:move": "node ./scripts/move-files.js --src=./ffmpeg --dest=./packages/ffmpeg",
     "ffmpeg:update": "node ./scripts/generate-projects.js --src=./packages/ffmpeg",
-    "ffmpeg:all": "npm run ffmpeg:clone && npm run ffmpeg:move && npm run ffmpeg:update"
+    "ffmpeg:all": "npm run ffmpeg:clone && npm run ffmpeg:move && npm run ffmpeg:update",
+    "run:docker:cmd": "docker run -v %cd%:/ffmpeg-wasm docker-img-ffmpeg-wasm",
+    "run:docker:powershell": "docker run -v $(PWD):/ffmpeg-wasm docker-img-ffmpeg-wasm",
+    "run:docker": "docker run -v ${PWD}:/ffmpeg-wasm docker-img-ffmpeg-wasm",
+    "nx:ffmpeg": "nx run ffmpeg:emmake",
+    "": "",
+    "docker:build:ffmpeg": "docker build  -t docker-img-ffmpeg -f build-ffmpeg.dockerfile .",
+    "docker:run:ffmpeg": "docker run -t -d docker-img-ffmpeg"
   },
   "private": true,
   "devDependencies": {
