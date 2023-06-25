@@ -1,9 +1,9 @@
-const { execSync } = require('child_process');
+import { execSync } from 'child_process';
 
 const cmds = [];
 
 // Detect what dependencies are missing.
-const dependencies = ['autoconf', 'automake', 'libtool', 'pkg-config', 'ragel', 'cmake', 'build-essential', 'emscripten', 'ninja-build'];
+const dependencies = ['autoconf', 'automake', 'build-essential', 'pkg-config', 'libtool'];
 for (const cmd of dependencies) {
   try {
     execSync(`command -v ${cmd}`);

@@ -1,8 +1,9 @@
-const fs = require('fs-extra');
+import { lstatSync, renameSync, writeFileSync } from 'fs-extra';
+import { walkFolders } from './shared.js';
+import { ffmpegPath } from './vars.js';
 const src = process.argv?.find((arg) => arg.startsWith('--src='))?.split('=')?.[1];
 
 const toRemoveFromPath = ['packages/', './packages/', './'];
-const ffmpegPath = 'packages/ffmpeg';
 
 if (!src) {
   console.error('Please provide both --src="..." argument');
@@ -14,31 +15,19 @@ walkFolders(src, (file) => {
 });
 
 /**
- * @param {fs.PathLike} dir
- * @param {(file:string) => void} callback
- */
-function walkFolders(dir, callback) {
-  fs.readdir(dir, (err, files) => {
-    files.sort().forEach((file) => {
-      callback(file);
-    });
-  });
-}
-
-/**
  * @param {string} filePath - The path to the file
  * @param {string} fileName - The name of the file
  */
 function generateFiles(filePath, fileName) {
   const completeFilePath = `${filePath}/${fileName}`;
 
-  if (fileName === 'Makefile' && !fs.lstatSync(completeFilePath).isDirectory()) {
+  if (fileName === 'Makefile' && !lstatSync(completeFilePath).isDirectory()) {
     console.log(completeFilePath);
     renameMakefile(completeFilePath);
     generateMakefile(filePath, completeFilePath);
     generateNxProjectJson(filePath);
   } else {
-    if (fs.lstatSync(completeFilePath).isDirectory()) {
+    if (lstatSync(completeFilePath).isDirectory()) {
       walkFolders(completeFilePath, (file) => {
         generateFiles(completeFilePath, file);
       });
@@ -56,14 +45,14 @@ function cleanup(filePath, fileName) {}
  * @param {string} completeFilePath
  */
 function renameMakefile(completeFilePath) {
-  fs.renameSync(`${completeFilePath}`, `${completeFilePath}_Original`);
+  renameSync(`${completeFilePath}`, `${completeFilePath}_Original`);
 }
 
 /**
  * @param {string} completeFilePath
  */
 function revertMakefile(completeFilePath) {
-  fs.renameSync(`${completeFilePath}_Original`, `${completeFilePath}`);
+  renameSync(`${completeFilePath}_Original`, `${completeFilePath}`);
 }
 
 /**
@@ -77,7 +66,7 @@ function generateMakefile(filePath, completeFilePath) {
 run-nx-command:
     npx nx run ${prefixlessPath}:emmake
         `;
-  fs.writeFileSync(`${completeFilePath}`, makefileTemplate);
+  writeFileSync(`${completeFilePath}`, makefileTemplate);
 }
 
 /**
@@ -105,7 +94,7 @@ function generateNxProjectJson(filePath) {
 
   const projectData = filePath === ffmpegPath ? ffmpegProjectJson : nxProjectJson;
 
-  fs.writeFileSync(`${filePath}/project.json`, JSON.stringify(projectData, null, 2));
+  writeFileSync(`${filePath}/project.json`, JSON.stringify(projectData, null, 2));
 }
 
 /**
