@@ -4,7 +4,8 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "submodules:update:ffmpeg": "node ./scripts/update-submodules.js",
+    "get:ffmpeg": "node ./scripts/git/clone-ffmpeg.js",
+    "": "",
     "install:deps": "node ./scripts/install-dependencies.js",
     "ffmpeg:move": "node ./scripts/move-files.js --src=./ffmpeg --dest=./packages/ffmpeg",
     "ffmpeg:update": "node ./scripts/generate-projects.js --src=./packages/ffmpeg",
