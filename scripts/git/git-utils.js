@@ -1,4 +1,4 @@
-import { useShell } from '../shared.js';
+import { useShell } from '../node-wrappers.js';
 
 /**
  * @param {string} url

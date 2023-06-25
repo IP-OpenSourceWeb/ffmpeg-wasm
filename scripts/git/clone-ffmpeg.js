@@ -1,4 +1,4 @@
-import { ffmpegGitUrl, ffmpegPath } from '../vars.js';
+import { ffmpegGitUrl, ffmpegPath } from '../project-vars.js';
 import { getAllTags, getLatestTag, gitClone } from './git-utils.js';
 
 const allTags = await getAllTags(ffmpegGitUrl);

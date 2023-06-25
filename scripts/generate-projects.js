@@ -1,6 +1,6 @@
 import { lstatSync, renameSync, writeFileSync } from 'fs-extra';
-import { walkFolders } from './shared.js';
-import { ffmpegPath } from './vars.js';
+import { walkFolders } from './node-wrappers.js';
+import { ffmpegPath } from './project-vars.js';
 const src = process.argv?.find((arg) => arg.startsWith('--src='))?.split('=')?.[1];
 
 const toRemoveFromPath = ['packages/', './packages/', './'];
