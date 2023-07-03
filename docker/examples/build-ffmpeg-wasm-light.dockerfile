@@ -12,11 +12,11 @@ RUN git clone \
 RUN find . -type f -exec dos2unix {} +
 
 # Install dependencies
-# RUN apt-get install -y autoconf
-# RUN apt-get install -y automake
-# RUN apt-get install -y build-essential
-# RUN apt-get install -y pkg-config
-# RUN apt-get install -y libtool
+RUN apt-get install -y autoconf
+RUN apt-get install -y automake
+RUN apt-get install -y build-essential
+RUN apt-get install -y pkg-config
+RUN apt-get install -y libtool
 
 
 # Configure FFmpeg
