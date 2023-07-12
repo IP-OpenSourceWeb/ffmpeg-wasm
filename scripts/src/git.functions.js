@@ -1,4 +1,4 @@
-import { useShell } from '../node-wrappers.js';
+import { useShell } from './shell.functions.js';
 
 /**
  * @param {string} url
@@ -20,15 +20,23 @@ export function getAllTags(repoUrl) {
 }
 
 /**
- * @param {any[]} tags
- * @param {RegExp} regex
+ * @param {string} repoUrl
+ * @param {string} tagName
+ */
+export function getRemoteCommitShaFromTag(repoUrl, tagName) {
+  return useShell(`git ls-remote --tags ${repoUrl} ${tagName}`).then((res) => res?.split('\t')[0]);
+}
+
+/**
+ * @param {string[]} tags
+ * @param {RegExp} regex - default allows the tag to contain a leading 'v' or 'n' or no letter then 2 or 3 dot separated numbers
  * @returns {string|undefined}
  */
-export function getLatestTag(tags, regex = /^n\d+\.\d+(?:\.\d+)?$/) {
+export function getLatestTag(tags = [], regex = /^(?:[nv])?\d+.\d+(?:.\d+)?$/) {
   const filteredTags = tags
     .map((tag) => tag.split('/').pop())
-    .filter((tag) => regex.test(tag))
-    .sort((a, b) => versionCompare(a, b));
+    .filter((tag) => !!tag && regex.test(tag))
+    .sort((a, b) => versionCompare(a ?? '', b ?? ''));
 
   return filteredTags.pop();
 }
