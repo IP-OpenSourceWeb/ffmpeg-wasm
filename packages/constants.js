@@ -10,5 +10,3 @@ export const ffmpegPackage = {
 };
 
 export const packages = [ffmpegPackage];
-
-// export const moduleTemplate = (/** @type {object} */ data) => `module.exports=${data}`;

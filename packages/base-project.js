@@ -2,11 +2,12 @@ import { packagesPath } from './constants';
 
 /**
  * @param {string} path
+ * @returns {import('../packages').INxProject}
  */
 export function generateNxProjectJson(path) {
   const sourceRoot = `${packagesPath}/${path}`;
   return {
-    name,
+    name: path,
     projectType: 'library',
     sourceRoot,
     tags: [],
@@ -19,6 +20,7 @@ export function generateNxProjectJson(path) {
 
 /**
  * @param {string} path
+ * @returns {import('../packages').INxTargets}
  */
 function baseCommands(path) {
   return {
@@ -45,6 +47,7 @@ function baseCommands(path) {
 
 /**
  * @param {string} path
+ * @returns {import('../packages').INxTargets}
  */
 function dockerCommands(path) {
   return {

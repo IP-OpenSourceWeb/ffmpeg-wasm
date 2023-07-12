@@ -1,3 +1,31 @@
+export interface INxProject {
+  name: string;
+  sourceRoot: string;
+  projectType: string;
+  tags: string[];
+  targets: INxTargets;
+  [key: string]: any;
+}
+
+export interface INxTargets {
+  [key: string]: INxTarget | INxCommand;
+}
+
+export interface INxTarget {
+  executor: string;
+  options: object;
+}
+
+export interface INxCommand {
+  executor: 'nx:run-commands';
+  options: {
+    commands: string[];
+    parallel: boolean;
+    cwd: string;
+    color: boolean;
+  };
+}
+
 export interface IPackage {
   name: string;
   version: string;
