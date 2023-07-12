@@ -1,5 +1,5 @@
-import { readFile } from './src/fs.functions.js';
 import { gitClone } from './src/git.functions.js';
+import { readEnv } from './src/project.functions.js';
 
-const env = JSON.parse(await readFile(`env.json`));
+const env = await readEnv();
 await gitClone(env.gitUrl, env.version, env.gitPath);
