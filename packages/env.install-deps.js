@@ -1,5 +1,5 @@
 import { execSync } from 'child_process';
-
+// TODO: replace execSync, update to install in all platforms + cygwin + mingw + msys2
 const cmds = [];
 
 // Detect what dependencies are missing.

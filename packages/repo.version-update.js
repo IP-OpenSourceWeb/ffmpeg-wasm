@@ -1,5 +1,5 @@
-import { getAllTags, getLatestTag } from './src/git.functions';
-import { readEnv, writeEnv } from './src/project.functions';
+import { getAllTags, getLatestTag } from '../scripts/git.functions.js';
+import { readEnv, writeEnv } from '../scripts/env.functions.js';
 
 const env = await readEnv();
 

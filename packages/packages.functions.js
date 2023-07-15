@@ -1,10 +1,11 @@
-import { packagesPath } from './constants';
+import { packagesPath } from './packages.constants.js';
 
 /**
  * @param {string} path
- * @returns {import('../packages').INxProject}
+ * @param {import('.').INxTargets} commands
+ * @returns {import('.').INxProject}
  */
-export function generateNxProjectJson(path) {
+export function generateNxProjectJson(path, commands = {}) {
   const sourceRoot = `${packagesPath}/${path}`;
   return {
     name: path,
@@ -12,6 +13,7 @@ export function generateNxProjectJson(path) {
     sourceRoot,
     tags: [],
     targets: {
+      ...commands,
       ...baseCommands(sourceRoot),
       ...dockerCommands(path),
     },
@@ -20,7 +22,7 @@ export function generateNxProjectJson(path) {
 
 /**
  * @param {string} path
- * @returns {import('../packages').INxTargets}
+ * @returns {import('.').INxTargets}
  */
 function baseCommands(path) {
   return {
@@ -47,10 +49,19 @@ function baseCommands(path) {
 
 /**
  * @param {string} path
- * @returns {import('../packages').INxTargets}
+ * @returns {import('.').INxTargets}
  */
 function dockerCommands(path) {
   return {
+    'docker:install': {
+      executor: 'nx:run-commands',
+      options: {
+        commands: [`docker run -t ffmpeg-wasm npx nx run ${path}:install`],
+        parallel: false,
+        cwd: '',
+        color: true,
+      },
+    },
     'docker:emmake': {
       executor: 'nx:run-commands',
       options: {

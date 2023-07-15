@@ -25,3 +25,17 @@ export async function useShell(args = '') {
 export async function useShellWithCurrentPath(args = '', token = `$PWD`) {
   return useShell(args.replace(token, process.cwd()));
 }
+
+export function getCurrentProcessPath() {
+  return process.cwd();
+}
+
+/**
+ *
+ * @param {string} replaceToken - The token from which to start replacing the path
+ * @param {string} path - The path to be appended to the current working directory
+ * @returns {string}
+ */
+export function reduceProcessPathTo(replaceToken, path) {
+  return getCurrentProcessPath().split(replaceToken)[0] + path;
+}
