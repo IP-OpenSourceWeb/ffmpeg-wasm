@@ -60,8 +60,6 @@ export async function readFile(filePath) {
 }
 
 export async function getProjectRootPath(path = __dirname) {
-  console.log(path);
-
   const files = await fs.readdir(path);
   if (files.includes('package.json')) {
     return path;
@@ -70,9 +68,16 @@ export async function getProjectRootPath(path = __dirname) {
 
 export async function getToRootPath(path = __dirname) {
   const rootPath = (await getProjectRootPath(path)) + '/';
-  const relativePath = path.split(rootPath)[1];
+  return getToPath(path, rootPath);
+}
 
-  console.log(relativePath);
+/**
+ * @param {string} path
+ * @param {string} basePath
+ */
+export function getToPath(path, basePath) {
+  const relativePath = path.split(basePath)[1];
+
   const numberOfBackSteps = relativePath.split('/').length - 1;
 
   if (numberOfBackSteps === 0) return './';

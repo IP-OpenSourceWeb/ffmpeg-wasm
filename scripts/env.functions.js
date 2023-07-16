@@ -41,3 +41,12 @@ export default commands;
 
   return writeFile(`${path}/commands.js`, template);
 }
+
+/**
+ * @param {string} path
+ * @param {import('../packages/index.js').INxProject} data
+ * @returns {Promise<void>}
+ */
+export function writeProjectJson(path, data) {
+  return writeFile(`${path}/project.json`, JSON.stringify(data, null, 2));
+}

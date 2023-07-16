@@ -1,3 +1,4 @@
+import { getToPath } from '../scripts/fs.functions.js';
 import { packagesPath } from './packages.constants.js';
 
 /**
@@ -25,11 +26,12 @@ export function generateNxProjectJson(path, commands = {}) {
  * @returns {import('.').INxTargets}
  */
 function baseCommands(path) {
+  const relativePath = getToPath(path, packagesPath);
   return {
     'update-version': {
       executor: 'nx:run-commands',
       options: {
-        commands: ['node ../../scripts/update-version.js'],
+        commands: [`node ${relativePath}/repo.version-update.js`],
         parallel: false,
         cwd: path,
         color: true,
@@ -38,7 +40,7 @@ function baseCommands(path) {
     'clone-repo': {
       executor: 'nx:run-commands',
       options: {
-        commands: ['node ../../scripts/update-version.js'],
+        commands: [`node ${relativePath}/repo.clone.js`],
         parallel: false,
         cwd: path,
         color: true,

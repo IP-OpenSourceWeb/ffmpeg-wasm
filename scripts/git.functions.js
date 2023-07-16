@@ -32,10 +32,12 @@ export function getRemoteCommitShaFromTag(repoUrl, tagName) {
  * @param {RegExp} regex - default allows the tag to contain a leading 'v' or 'n' or no letter then 2 or 3 dot separated numbers
  * @returns {string|undefined}
  */
-export function getLatestTag(tags = [], regex = /^(?:[nv])?\d+.\d+(?:.\d+)?$/) {
+export function getLatestTag(tags = [], regex = /^(?:[nv])?\d+.\d+(?:.\d+)?$/, replaceLetterRegex = /^[nv]/) {
+  console.log(tags);
   const filteredTags = tags
     .map((tag) => tag.split('/').pop())
     .filter((tag) => !!tag && regex.test(tag))
+    .map((tag) => tag?.replace(replaceLetterRegex, ''))
     .sort((a, b) => versionCompare(a ?? '', b ?? ''));
 
   return filteredTags.pop();
@@ -46,8 +48,14 @@ export function getLatestTag(tags = [], regex = /^(?:[nv])?\d+.\d+(?:.\d+)?$/) {
  * @param {string} b
  */
 function versionCompare(a, b) {
-  const aParts = a.split('.').map(Number);
-  const bParts = b.split('.').map(Number);
+  const toNumberArr = (/** @type {string} */ str) =>
+    str
+      .split('.')
+      .map(Number)
+      .filter((part) => Number.isInteger(part));
+
+  const aParts = toNumberArr(a);
+  const bParts = toNumberArr(b);
 
   for (let i = 0; i < aParts.length; i++) {
     if (aParts[i] !== bParts[i]) {

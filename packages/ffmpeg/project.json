@@ -1,0 +1,91 @@
+{
+  "name": "ffmpeg",
+  "projectType": "library",
+  "sourceRoot": "packages/ffmpeg",
+  "tags": [],
+  "targets": {
+    "default": {
+      "emmake": {
+        "executor": "nx:run-commands",
+        "options": {
+          "commands": [
+            "emconfigure ./configure --disable-x86asm --disable-stripping",
+            "emmake make ",
+            "emmake make install"
+          ],
+          "parallel": false,
+          "cwd": "packages/ffmpeg",
+          "color": true
+        }
+      },
+      "make": {
+        "executor": "nx:run-commands",
+        "options": {
+          "commands": [
+            "./configure --target-os=none --arch=x86_32 --enable-cross-compile --disable-x86asm --disable-inline-asm --disable-stripping --disable-programs --disable-doc",
+            "make --file=Makefile_Original",
+            "mkdir -p wasm/dist"
+          ],
+          "parallel": false,
+          "cwd": "packages/ffmpeg",
+          "color": true
+        }
+      }
+    },
+    "update-version": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "node ../repo.version-update.js"
+        ],
+        "parallel": false,
+        "cwd": "packages/ffmpeg",
+        "color": true
+      }
+    },
+    "clone-repo": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "node ../repo.clone.js"
+        ],
+        "parallel": false,
+        "cwd": "packages/ffmpeg",
+        "color": true
+      }
+    },
+    "docker:install": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "docker run -t ffmpeg-wasm npx nx run ffmpeg:install"
+        ],
+        "parallel": false,
+        "cwd": "",
+        "color": true
+      }
+    },
+    "docker:emmake": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "docker run -t ffmpeg-wasm npx nx run ffmpeg:emmake"
+        ],
+        "parallel": false,
+        "cwd": "",
+        "color": true
+      }
+    },
+    "docker:make": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "docker run -t ffmpeg-wasm npx nx run ffmpeg:make"
+        ],
+        "parallel": false,
+        "cwd": "",
+        "color": true
+      }
+    }
+  }
+}
