@@ -32,18 +32,30 @@
         }
       }
     },
-    "update-version": {
+    "repo:update": {
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "node ../repo.version-update.js"
+          "nx run ..:repo:update-version",
+          "nx run ..:repo:clone"
         ],
         "parallel": false,
         "cwd": "packages/ffmpeg",
         "color": true
       }
     },
-    "clone-repo": {
+    "repo:update-version": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "node ../repo.update-version.js"
+        ],
+        "parallel": false,
+        "cwd": "packages/ffmpeg",
+        "color": true
+      }
+    },
+    "repo:clone": {
       "executor": "nx:run-commands",
       "options": {
         "commands": [
@@ -58,7 +70,7 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "docker run -t ffmpeg-wasm npx nx run ffmpeg:install"
+          "node shell.run-current-path.js \"docker run -v $PWD:/ffmpeg-wasm -t ffmpeg-wasm npx nx run ffmpeg:install\""
         ],
         "parallel": false,
         "cwd": "",
@@ -69,7 +81,7 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "docker run -t ffmpeg-wasm npx nx run ffmpeg:emmake"
+          "node shell.run-current-path.js \"docker run -v $PWD:/ffmpeg-wasm -t ffmpeg-wasm npx nx run ffmpeg:emmake\""
         ],
         "parallel": false,
         "cwd": "",
@@ -80,7 +92,7 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "docker run -t ffmpeg-wasm npx nx run ffmpeg:make"
+          "node shell.run-current-path.js \"docker run -v $PWD:/ffmpeg-wasm -t ffmpeg-wasm npx nx run ffmpeg:make\""
         ],
         "parallel": false,
         "cwd": "",

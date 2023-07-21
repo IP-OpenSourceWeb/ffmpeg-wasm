@@ -1,0 +1,35 @@
+{
+  "name": "root",
+  "projectType": "library",
+  "sourceRoot": "",
+  "tags": [],
+  "targets": {
+    "env:init": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["node packages/env.init.js"],
+        "parallel": false,
+        "cwd": "",
+        "color": true
+      }
+    },
+    "env:install-deps": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["node packages/env.install-deps.js"],
+        "parallel": false,
+        "cwd": "",
+        "color": true
+      }
+    },
+    "docker:build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["docker build -t ffmpeg-wasm ."],
+        "parallel": false,
+        "cwd": "",
+        "color": true
+      }
+    }
+  }
+}

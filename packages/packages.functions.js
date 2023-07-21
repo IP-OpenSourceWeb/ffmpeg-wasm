@@ -28,16 +28,25 @@ export function generateNxProjectJson(path, commands = {}) {
 function baseCommands(path) {
   const relativePath = getToPath(path, packagesPath);
   return {
-    'update-version': {
+    'repo:update': {
       executor: 'nx:run-commands',
       options: {
-        commands: [`node ${relativePath}/repo.version-update.js`],
+        commands: [`nx run ${relativePath}:repo:update-version`, `nx run ${relativePath}:repo:clone`],
         parallel: false,
         cwd: path,
         color: true,
       },
     },
-    'clone-repo': {
+    'repo:update-version': {
+      executor: 'nx:run-commands',
+      options: {
+        commands: [`node ${relativePath}/repo.update-version.js`],
+        parallel: false,
+        cwd: path,
+        color: true,
+      },
+    },
+    'repo:clone': {
       executor: 'nx:run-commands',
       options: {
         commands: [`node ${relativePath}/repo.clone.js`],
@@ -58,7 +67,7 @@ function dockerCommands(path) {
     'docker:install': {
       executor: 'nx:run-commands',
       options: {
-        commands: [`docker run -t ffmpeg-wasm npx nx run ${path}:install`],
+        commands: [`node shell.run-current-path.js "docker run -v $PWD:/ffmpeg-wasm -t ffmpeg-wasm npx nx run ${path}:install"`],
         parallel: false,
         cwd: '',
         color: true,
@@ -67,7 +76,7 @@ function dockerCommands(path) {
     'docker:emmake': {
       executor: 'nx:run-commands',
       options: {
-        commands: [`docker run -t ffmpeg-wasm npx nx run ${path}:emmake`],
+        commands: [`node shell.run-current-path.js "docker run -v $PWD:/ffmpeg-wasm -t ffmpeg-wasm npx nx run ${path}:emmake"`],
         parallel: false,
         cwd: '',
         color: true,
@@ -76,7 +85,7 @@ function dockerCommands(path) {
     'docker:make': {
       executor: 'nx:run-commands',
       options: {
-        commands: [`docker run -t ffmpeg-wasm npx nx run ${path}:make`],
+        commands: [`node shell.run-current-path.js "docker run -v $PWD:/ffmpeg-wasm -t ffmpeg-wasm npx nx run ${path}:make"`],
         parallel: false,
         cwd: '',
         color: true,

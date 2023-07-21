@@ -19,3 +19,10 @@ Visit the [Nx Documentation](https://nx.dev) to learn more.
 ## Useful links
 
 https://nx.dev/packages/nx/executors/run-commands
+
+## References
+
+- Nx
+- FFMPEG
+- TSDOC
+- WebAssembly / Emcripten

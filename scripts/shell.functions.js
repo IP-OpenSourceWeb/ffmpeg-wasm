@@ -23,7 +23,7 @@ export async function useShell(args = '') {
  * @returns {Promise<string|undefined>}
  */
 export async function useShellWithCurrentPath(args = '', token = `$PWD`) {
-  return useShell(args.replace(token, process.cwd()));
+  return useShell(args.replace(token, getCurrentProcessPath()));
 }
 
 export function getCurrentProcessPath() {

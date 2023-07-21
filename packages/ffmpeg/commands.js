@@ -1,4 +1,5 @@
 const emscriptenFlags = [];
+
 const ffmpegFlags = [
   '--disable-x86asm',
   '--disable-stripping',
