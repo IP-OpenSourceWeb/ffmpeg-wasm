@@ -1,7 +1,7 @@
 import { getProjectRootPath, getToRootPath, readFile, writeFile } from './fs.functions.js';
 
 /**
- * @returns {Promise<import('../packages/index.js').IPackage>}
+ * @returns {Promise<import('../packages.d.ts').IPackage>}
  * @param {string} path
  */
 export async function readEnv(path = '.') {
@@ -9,7 +9,7 @@ export async function readEnv(path = '.') {
 }
 
 /**
- * @param {import('../packages/index.js').IPackage} env
+ * @param {import('../packages.d.ts').IPackage} env
  * @param {string} path
  * @returns {Promise<void>}
  */
@@ -18,7 +18,7 @@ export async function writeEnv(env, path = '.') {
 }
 
 /**
- * @return {Promise<import('../packages/index.js').INxTargets>}
+ * @return {Promise<import('../packages.d.ts').INxTargets>}
  * @param {string} path
  */
 export async function readCommands(path) {
@@ -29,7 +29,7 @@ export async function readCommands(path) {
 
 /**
  * @param {string} path
- * @param {import('../packages/index.js').INxTargets} commands
+ * @param {import('../packages.d.ts').INxTargets} commands
  * @returns {Promise<void>}
  */
 export function writeCommands(path, commands = {}) {
@@ -44,7 +44,7 @@ export default commands;
 
 /**
  * @param {string} path
- * @param {import('../packages/index.js').INxProject} data
+ * @param {import('../packages.d.ts').INxProject} data
  * @returns {Promise<void>}
  */
 export function writeProjectJson(path, data) {

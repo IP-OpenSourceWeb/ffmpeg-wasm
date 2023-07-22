@@ -1,7 +1,7 @@
 export const packagesPath = 'packages';
 export const repoDir = 'src';
 
-/** @type {import('.').IPackage} */
+/** @type {import('./packages').IPackage} */
 export const ffmpegPackage = {
   name: 'ffmpeg',
   gitUrl: 'https://github.com/FFmpeg/FFmpeg.git',

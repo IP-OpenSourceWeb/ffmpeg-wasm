@@ -1,10 +1,10 @@
-import { getToPath } from '../scripts/fs.functions.js';
+import { getToPath } from './scripts/fs.functions.js';
 import { packagesPath } from './packages.constants.js';
 
 /**
  * @param {string} path
- * @param {import('.').INxTargets} commands
- * @returns {import('.').INxProject}
+ * @param {import('./packages.d.ts').INxTargets} commands
+ * @returns {import('./packages.d.ts').INxProject}
  */
 export function generateNxProjectJson(path, commands = {}) {
   const sourceRoot = `${packagesPath}/${path}`;
@@ -23,7 +23,7 @@ export function generateNxProjectJson(path, commands = {}) {
 
 /**
  * @param {string} path
- * @returns {import('.').INxTargets}
+ * @returns {import('./packages.d.ts').INxTargets}
  */
 function baseCommands(path) {
   const relativePath = getToPath(path, packagesPath);
@@ -60,14 +60,14 @@ function baseCommands(path) {
 
 /**
  * @param {string} path
- * @returns {import('.').INxTargets}
+ * @returns {import('./packages.d.ts').INxTargets}
  */
 function dockerCommands(path) {
   return {
     'docker:install': {
       executor: 'nx:run-commands',
       options: {
-        commands: [`node shell.run-current-path.js "docker run -v $PWD:/ffmpeg-wasm -t ffmpeg-wasm npx nx run ${path}:install"`],
+        commands: [`node docker run -t ffmpeg-wasm npx nx run ${path}:install`],
         parallel: false,
         cwd: '',
         color: true,
@@ -76,7 +76,7 @@ function dockerCommands(path) {
     'docker:emmake': {
       executor: 'nx:run-commands',
       options: {
-        commands: [`node shell.run-current-path.js "docker run -v $PWD:/ffmpeg-wasm -t ffmpeg-wasm npx nx run ${path}:emmake"`],
+        commands: [`node docker run -t ffmpeg-wasm npx nx run ${path}:emmake`],
         parallel: false,
         cwd: '',
         color: true,
@@ -85,7 +85,7 @@ function dockerCommands(path) {
     'docker:make': {
       executor: 'nx:run-commands',
       options: {
-        commands: [`node shell.run-current-path.js "docker run -v $PWD:/ffmpeg-wasm -t ffmpeg-wasm npx nx run ${path}:make"`],
+        commands: [`node docker run -t ffmpeg-wasm npx nx run ${path}:make`],
         parallel: false,
         cwd: '',
         color: true,
