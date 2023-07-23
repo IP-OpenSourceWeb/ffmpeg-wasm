@@ -1,0 +1,50 @@
+{
+  "name": "docker",
+  "projectType": "library",
+  "sourceRoot": "",
+  "tags": [],
+  "targets": {
+    "docker:build:ffmpeg": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["docker build  -t docker-ffmpeg-example -f docker/examples/build-ffmpeg.dockerfile ."],
+        "cwd": ""
+      }
+    },
+    "docker:run:ffmpeg": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["docker run -t -d  docker-ffmpeg-example"],
+        "cwd": ""
+      }
+    },
+    "docker:build:ffmpeg-wasm": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["docker build  -t docker-ffmpeg-wasm-example -f docker/examples/build-ffmpeg-wasm.dockerfile ."],
+        "cwd": ""
+      }
+    },
+    "docker:run:ffmpeg-wasm": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["docker run -t -d docker-ffmpeg-wasm-example"],
+        "cwd": ""
+      }
+    },
+    "docker:build:ffmpeg-wasm-light": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["docker build  -t docker-ffmpeg-wasm-light-example -f docker/examples/build-ffmpeg-wasm-light.dockerfile ."],
+        "cwd": ""
+      }
+    },
+    "docker:run:ffmpeg-wasm-light": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["docker run -t -d docker-ffmpeg-wasm-light-example"],
+        "cwd": ""
+      }
+    }
+  }
+}

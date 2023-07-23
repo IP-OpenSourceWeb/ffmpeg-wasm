@@ -38,14 +38,5 @@ testem.log
 .DS_Store
 Thumbs.db
 
-# packages/**/*.c
-# packages/**/*.h
-# packages/**/*.v
-# packages/**/*.ffpreset
-# packages/**/*.mak
-
-# packages/libs
-
-# Except 
-# !packages/ffmpeg/**/project.json
+packages/**/src
 

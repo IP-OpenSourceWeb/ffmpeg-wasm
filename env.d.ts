@@ -26,6 +26,10 @@ export interface INxCommand {
   };
 }
 
+export interface ICommandsModule {
+  commandsFn: (packagePath: string, gitPath: string) => INxTargets;
+}
+
 export interface IPackage {
   name: string;
   version: string;

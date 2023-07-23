@@ -1,0 +1,36 @@
+FROM emscripten/emsdk
+RUN apt-get update
+RUN apt-get install pkg-config
+RUN apt-get install -y dos2unix
+
+# Set the working directory to /ffmpeg
+WORKDIR /ffmpeg
+
+COPY package.json ./
+
+RUN npm install
+# RUN npm install -g nx
+# COPY . .
+
+COPY ./scripts ./scripts
+
+# Clone the latest release version of FFmpeg
+RUN node ./scripts/git/clone-ffmpeg.js
+# RUN git clone --branch $(git ls-remote --tags --refs https://github.com/FFmpeg/FFmpeg.git | awk -F/ '{print $NF}' | grep -E '^n[0-9]+\.[0-9]+(?:\.[0-9]+)?$' | sort -V | tail -n 1) --depth 1 https://github.com/FFmpeg/FFmpeg.git .
+
+Run mv  ./ffmpeg-wasm/* ./
+
+# RUN npm run ffmpeg:update
+
+# Convert all files to unix format
+RUN find . -type f -exec dos2unix {} +
+
+# RUN "npm run nx:ffmpeg"
+
+# Configure FFmpeg
+RUN emconfigure ./configure --disable-x86asm --disable-stripping
+# Build FFmpeg
+RUN emmake make
+RUN emmake make install
+# Comment this to keep the container running
+CMD ['ffmpeg','-version'] 

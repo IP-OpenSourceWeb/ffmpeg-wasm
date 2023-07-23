@@ -1,7 +1,7 @@
-import { getProjectRootPath, getToRootPath, readFile, writeFile } from './fs.functions.js';
+import { getToRootPath, readFile, writeFile } from './fs.functions.js';
 
 /**
- * @returns {Promise<import('../packages.d.ts').IPackage>}
+ * @returns {Promise<import('../env.js').IPackage>}
  * @param {string} path
  */
 export async function readEnv(path = '.') {
@@ -9,7 +9,7 @@ export async function readEnv(path = '.') {
 }
 
 /**
- * @param {import('../packages.d.ts').IPackage} env
+ * @param {import('../env.js').IPackage} env
  * @param {string} path
  * @returns {Promise<void>}
  */
@@ -18,18 +18,23 @@ export async function writeEnv(env, path = '.') {
 }
 
 /**
- * @return {Promise<import('../packages.d.ts').INxTargets>}
  * @param {string} path
+ * @return {Promise<{commandsFn:import('../env.js').ICommandsModule['commandsFn'], error?:any} | {commandsFn?:import('../env.js').ICommandsModule['commandsFn'], error: any}>}
  */
 export async function readCommands(path) {
-  const absolutePath = `${await getToRootPath()}/${path}/commands.js`;
-  console.log(absolutePath);
-  return await import(absolutePath);
+  try {
+    const absolutePath = `${await getToRootPath()}/${path}/commands.js`;
+    return { commandsFn: (await import(absolutePath)).default.commandsFn };
+  } catch (e) {
+    return {
+      error: await e,
+    };
+  }
 }
 
 /**
  * @param {string} path
- * @param {import('../packages.d.ts').INxTargets} commands
+ * @param {import('../env.js').INxTargets} commands
  * @returns {Promise<void>}
  */
 export function writeCommands(path, commands = {}) {
@@ -44,7 +49,7 @@ export default commands;
 
 /**
  * @param {string} path
- * @param {import('../packages.d.ts').INxProject} data
+ * @param {import('../env.js').INxProject} data
  * @returns {Promise<void>}
  */
 export function writeProjectJson(path, data) {

@@ -3,24 +3,28 @@ import { promisify } from 'util';
 
 /**
  * @param {string} args
- * @returns {Promise<string|undefined>}
+ * @returns {Promise<{stdout:string, stderr?:any} | {stdout?:string, stderr:any}>}
  */
 export async function useShell(args = '') {
   try {
-    const { stdout, stderr } = await promisify(exec)(args);
     console.log(args);
-    if (stderr) console.error(stderr);
-
-    return stdout;
+    const { stdout, stderr } = await promisify(exec)(args);
+    if (stderr) {
+      console.warn(stderr);
+      return { stdout, stderr };
+    }
+    console.log(stdout);
+    return { stdout };
   } catch (err) {
-    console.error(err);
+    console.warn(err);
+    return { stderr: err };
   }
 }
 
 /**
  * @param {string} args
  * @param {string} token - The token used to be replaced with the current working directory
- * @returns {Promise<string|undefined>}
+ * @returns {Promise<{stdout:string, stderr?:any} | {stdout?:string, stderr:any}>}
  */
 export async function useShellWithCurrentPath(args = '', token = `$PWD`) {
   return useShell(args.replace(token, getCurrentProcessPath()));

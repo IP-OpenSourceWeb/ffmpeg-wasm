@@ -4,40 +4,47 @@
   "sourceRoot": "packages/ffmpeg",
   "tags": [],
   "targets": {
-    "default": {
-      "emmake": {
-        "executor": "nx:run-commands",
-        "options": {
-          "commands": [
-            "emconfigure ./configure --disable-x86asm --disable-stripping",
-            "emmake make ",
-            "emmake make install"
-          ],
-          "parallel": false,
-          "cwd": "packages/ffmpeg",
-          "color": true
-        }
-      },
-      "make": {
-        "executor": "nx:run-commands",
-        "options": {
-          "commands": [
-            "./configure --target-os=none --arch=x86_32 --enable-cross-compile --disable-x86asm --disable-inline-asm --disable-stripping --disable-programs --disable-doc",
-            "make --file=Makefile_Original",
-            "mkdir -p wasm/dist"
-          ],
-          "parallel": false,
-          "cwd": "packages/ffmpeg",
-          "color": true
-        }
+    "emmake": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "emconfigure ./configure --disable-x86asm --disable-stripping",
+          "emmake make"
+        ],
+        "parallel": false,
+        "cwd": "packages/ffmpeg/src",
+        "color": true
+      }
+    },
+    "make": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "./configure --disable-x86asm --disable-stripping",
+          "make"
+        ],
+        "parallel": false,
+        "cwd": "packages/ffmpeg/src",
+        "color": true
+      }
+    },
+    "install": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "emmake make install"
+        ],
+        "parallel": false,
+        "cwd": "packages/ffmpeg/src",
+        "color": true
       }
     },
     "repo:update": {
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "nx run ..:repo:update-version",
-          "nx run ..:repo:clone"
+          "nx run ffmpeg:repo:update-version",
+          "nx run ffmpeg:repo:clone"
         ],
         "parallel": false,
         "cwd": "packages/ffmpeg",
@@ -70,7 +77,7 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "node shell.run-current-path.js \"docker run -v $PWD:/ffmpeg-wasm -t ffmpeg-wasm npx nx run ffmpeg:install\""
+          "docker run -t ffmpeg-wasm nx run ffmpeg:emmake && nx run ffmpeg:install"
         ],
         "parallel": false,
         "cwd": "",
@@ -81,7 +88,7 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "node shell.run-current-path.js \"docker run -v $PWD:/ffmpeg-wasm -t ffmpeg-wasm npx nx run ffmpeg:emmake\""
+          "docker run -t ffmpeg-wasm nx run ffmpeg:emmake"
         ],
         "parallel": false,
         "cwd": "",
@@ -92,7 +99,7 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "node shell.run-current-path.js \"docker run -v $PWD:/ffmpeg-wasm -t ffmpeg-wasm npx nx run ffmpeg:make\""
+          "docker run -t ffmpeg-wasm nx run ffmpeg:make"
         ],
         "parallel": false,
         "cwd": "",

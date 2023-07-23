@@ -1,22 +1,22 @@
 {
-  "name": "root",
+  "name": "env",
   "projectType": "library",
   "sourceRoot": "",
   "tags": [],
   "targets": {
-    "env:init": {
+    "init": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["node packages/env.init.js"],
+        "commands": ["node env.init.js"],
         "parallel": false,
         "cwd": "",
         "color": true
       }
     },
-    "env:install-deps": {
+    "install-deps": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["node packages/env.install-deps.js"],
+        "commands": ["node env.install-deps.js"],
         "parallel": false,
         "cwd": "",
         "color": true

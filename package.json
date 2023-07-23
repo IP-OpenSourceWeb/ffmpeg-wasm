@@ -3,22 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "type": "module",
-  "scripts": {
-    "run:docker:cmd": "docker run -v %cd%:/ffmpeg-wasm docker-ffmpeg-wasm",
-    "run:docker:powershell": "docker run -v $(PWD):/ffmpeg-wasm docker-ffmpeg-wasm",
-    "": "",
-    "run:docker": "docker run -v ${PWD}:/ffmpeg-wasm docker-ffmpeg-wasm",
-    "nx:ffmpeg": "nx run ffmpeg:emmake",
-    "": "",
-    "docker:build:ffmpeg": "docker build  -t docker-ffmpeg-example -f docker/examples/build-ffmpeg.dockerfile .",
-    "docker:run:ffmpeg": "docker run -t -d docker-ffmpeg-example",
-    "": "",
-    "docker:build:ffmpeg-wasm": "podman build  -t docker-ffmpeg-wasm-example -f docker/examples/build-ffmpeg-wasm.dockerfile .",
-    "docker:run:ffmpeg-wasm": "podman run -t -d docker-ffmpeg-wasm-example",
-    "": "",
-    "docker:build:ffmpeg-wasm-light": "docker build  -t docker-ffmpeg-wasm-light-example -f docker/examples/build-ffmpeg-wasm-light.dockerfile .",
-    "docker:run:ffmpeg-wasm-light": "docker run -t -d docker-ffmpeg-wasm-light-example"
-  },
+  "scripts": {},
   "private": true,
   "devDependencies": {
     "@types/node": "^20.3.1",
@@ -27,6 +12,7 @@
     "nx-cloud": "latest"
   },
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "docker/*"
   ]
 }
