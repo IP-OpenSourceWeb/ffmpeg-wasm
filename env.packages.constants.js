@@ -1,3 +1,5 @@
+export const nxRoot = `{workspaceRoot}`;
+export const nxProjectRoot = `{projectRoot}`;
 export const packagesPath = 'packages';
 export const repoDir = 'src';
 
@@ -18,11 +20,18 @@ export const commandNames = {
     updateVersion: 'repo:update-version',
   },
   package: {
-    install: 'install',
+    configure: 'configure',
     emmake: 'emmake',
+    install: 'install',
+
+    emmakeJs: 'emmakeJs',
     make: 'make',
   },
 
   container: 'docker',
   containerImg: 'ffmpeg-wasm',
+};
+
+export const dependsOnNames = {
+  envJson: 'envJson',
 };

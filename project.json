@@ -30,6 +30,15 @@
         "cwd": "",
         "color": true
       }
+    },
+    "docker:build:base": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["docker build -t ffmpeg-wasm-base -f dockerfile.base ."],
+        "parallel": false,
+        "cwd": "",
+        "color": true
+      }
     }
   }
 }

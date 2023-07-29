@@ -13,17 +13,21 @@ export interface INxTargets {
 
 export interface INxTarget {
   executor: string;
-  options: object;
+  options: INxTargetOptions;
+  dependsOn?: string[];
+  namedInputs?: { [key: string]: string[] };
 }
 
-export interface INxCommand {
+export interface INxCommand extends INxTarget {
   executor: 'nx:run-commands';
-  options: {
-    commands: string[];
-    parallel: boolean;
-    cwd: string;
-    color: boolean;
-  };
+  options: INxTargetOptions;
+}
+
+export interface INxTargetOptions {
+  commands: string[];
+  parallel?: boolean;
+  cwd?: string;
+  color?: boolean;
 }
 
 export interface ICommandsModule {

@@ -5,11 +5,15 @@
     "defaultBase": "master"
   },
 
+  "namedInputs": {
+    "envJson": ["{projectRoot}/env.json"]
+  },
+
   "tasksRunnerOptions": {
     "default": {
       "runner": "nx-cloud",
       "options": {
-        "cacheableOperations": ["build", "lint", "test", "e2e"],
+        "cacheableOperations": ["build", "lint", "test", "e2e", "docker:emmake", "emmake", "configure"],
         "accessToken": "OTdkODgyYWUtZGFhYy00MTc4LWJlNjEtNzhjNzg5NWU1OWI2fHJlYWQtd3JpdGU="
       }
     }

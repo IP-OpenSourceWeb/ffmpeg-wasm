@@ -1,0 +1,12 @@
+FROM emscripten/emsdk
+RUN apt-get update
+RUN apt-get install -y dos2unix
+
+RUN npm install -g nx
+# Set the working directory to /ffmpeg
+WORKDIR /ffmpeg-wasm
+
+COPY ./package.json ./package.json
+# Install npm dependencies
+RUN npm install
+

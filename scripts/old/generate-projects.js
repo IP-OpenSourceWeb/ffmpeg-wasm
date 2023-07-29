@@ -1,5 +1,5 @@
+import { packagesPath } from '../../env.packages.constants.js';
 import { walkPathRecursive, rename, writeFile } from '../fs.functions.js';
-import { packagesPath, ffmpegPath } from '../project-vars.js';
 const src = process.argv?.find((arg) => arg.startsWith('--src='))?.split('=')?.[1];
 
 const toRemoveFromPath = [`${packagesPath}/`, `./${packagesPath}/`, './'];

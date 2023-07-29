@@ -1,8 +1,8 @@
-import { commandNames } from '../../env.packages.constants.js';
+import { basePackageCommands } from '../../env.packages.functions.js';
 
 const emscriptenFlags = [];
 
-const ffmpegFlags = [
+const packageFlags = [
   '--disable-x86asm',
   '--disable-stripping',
 
@@ -10,40 +10,13 @@ const ffmpegFlags = [
 ];
 
 /**
- * @param {string} packagePath
+ * @param {string} projectPath
  * @param {string} gitPath
  * @return {import('../../env.d.ts').INxTargets}
  */
-const commandsFn = (packagePath, gitPath) => {
-  return {
-    [commandNames.package.emmake]: {
-      executor: 'nx:run-commands',
-      options: {
-        commands: [`emconfigure ./configure ${ffmpegFlags.join(' ')}`, 'emmake make'],
-        parallel: false,
-        cwd: gitPath,
-        color: true,
-      },
-    },
-    [commandNames.package.make]: {
-      executor: 'nx:run-commands',
-      options: {
-        commands: [`./configure ${ffmpegFlags.join(' ')}`, 'make'],
-        parallel: false,
-        cwd: gitPath,
-        color: true,
-      },
-    },
-    [commandNames.package.install]: {
-      executor: 'nx:run-commands',
-      options: {
-        commands: ['emmake make install'],
-        parallel: false,
-        cwd: gitPath,
-        color: true,
-      },
-    },
-  };
+const commandsFn = (projectPath, gitPath) => {
+  const commands = basePackageCommands(projectPath, packageFlags, emscriptenFlags);
+  return commands;
 };
 
 /** @type {import('../../env.d.ts').ICommandsModule} */

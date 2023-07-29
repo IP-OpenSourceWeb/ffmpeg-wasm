@@ -1,4 +1,4 @@
-import { commandNames, packagesPath } from './env.packages.constants.js';
+import { commandNames, dependsOnNames, nxProjectRoot, nxRoot, packagesPath, repoDir } from './env.packages.constants.js';
 import { getToPath } from './scripts/fs.functions.js';
 
 /**
@@ -7,92 +7,122 @@ import { getToPath } from './scripts/fs.functions.js';
  * @returns {import('./env.js').INxProject}
  */
 export function generateNxProjectJson(packageName, commands = {}) {
-  const absolutePath = `${packagesPath}/${packageName}`;
+  const projectPath = `${packagesPath}/${packageName}`;
   return {
     name: packageName,
     projectType: 'library',
-    sourceRoot: absolutePath,
+    sourceRoot: projectPath,
     tags: [],
     targets: {
       ...commands,
-      ...baseCommands(packageName, absolutePath),
-      ...containerCommands(packageName),
+      ...baseCommands(packageName, projectPath),
+      ...containerCommands(packageName, commands),
     },
   };
 }
 
 /**
  * @param {string} packageName
- * @param {string} absolutePath
+ * @param {string} projectPath
  * @returns {import('./env.js').INxTargets}
  */
-function baseCommands(packageName, absolutePath) {
-  const relativePath = getToPath(absolutePath, packagesPath);
+function baseCommands(packageName, projectPath) {
+  const relativePath = getToPath(projectPath, packagesPath);
   return {
-    [commandNames.repo.update]: {
-      executor: 'nx:run-commands',
-      options: {
-        commands: [`nx run ${packageName}:${commandNames.repo.updateVersion}`, `nx run ${packageName}:${commandNames.repo.clone}`],
-        parallel: false,
-        cwd: absolutePath,
-        color: true,
-      },
+    [commandNames.repo.update]: baseCommand({
+      commands: [`nx run ${packageName}:${commandNames.repo.updateVersion}`, `nx run ${packageName}:${commandNames.repo.clone}`],
+      cwd: projectPath,
+    }),
+    [commandNames.repo.updateVersion]: baseCommand({
+      commands: [`node ${relativePath}/repo.update-version.js`],
+      cwd: projectPath,
+    }),
+    [commandNames.repo.clone]: baseCommand({
+      commands: [`node ${relativePath}/repo.clone.js`],
+      cwd: projectPath,
+    }),
+  };
+}
+
+/**
+ * @param {string} projectPath
+ * @param {string[]} packageFlags
+ * @param {string[]} emscriptenFlags
+ * @return {import('./env.d.ts').INxTargets}
+ */
+export function basePackageCommands(projectPath, packageFlags, emscriptenFlags) {
+  return {
+    [commandNames.package.configure]: {
+      dependsOn: [`${dependsOnNames.envJson}`],
+      ...baseCommand({
+        commands: [`emconfigure ./configure ${packageFlags.join(' ')}`],
+        cwd: `${projectPath}/${repoDir}`,
+      }),
     },
-    [commandNames.repo.updateVersion]: {
-      executor: 'nx:run-commands',
-      options: {
-        commands: [`node ${relativePath}/repo.update-version.js`],
-        parallel: false,
-        cwd: absolutePath,
-        color: true,
-      },
+    [commandNames.package.emmake]: {
+      dependsOn: [`${commandNames.package.configure}`],
+      ...baseCommand({
+        commands: [`emmake make ${emscriptenFlags.join(' ')}`],
+        cwd: `${projectPath}/${repoDir}`,
+      }),
     },
-    [commandNames.repo.clone]: {
-      executor: 'nx:run-commands',
-      options: {
-        commands: [`node ${relativePath}/repo.clone.js`],
-        parallel: false,
-        cwd: absolutePath,
-        color: true,
-      },
+
+    [commandNames.package.install]: {
+      dependsOn: [`${commandNames.package.emmake}`],
+      ...baseCommand({
+        commands: ['emmake make install'],
+        cwd: `${projectPath}/${repoDir}`,
+      }),
+    },
+
+    [commandNames.package.make]: {
+      dependsOn: [`${commandNames.package.configure}`],
+      ...baseCommand({
+        commands: [`make`],
+        cwd: `${projectPath}/${repoDir}`,
+      }),
     },
   };
 }
 
 /**
  * @param {string} packageName
+ * @param {import('./env.js').INxTargets} commands
  * @returns {import('./env.js').INxTargets}
  */
-function containerCommands(packageName) {
+function containerCommands(packageName, commands) {
+  return Object.keys(commands).reduce((acc, key) => {
+    const runContainCommand = baseCommand({
+      commands: [`${commandNames.container} run -t ${commandNames.containerImg} nx run ${packageName}:${key}`],
+    });
+
+    const runInContainerCommand = baseCommand({
+      commands: [
+        `node shell.run-current-path.js \
+"${commandNames.container} \
+run -v $PWD:/${commandNames.containerImg} -t ${commandNames.containerImg} \
+find ./packages -type f -exec dos2unix {} + && nx run ${packageName}:${key}"`,
+      ],
+    });
+
+    acc[`${commandNames.container}:${key}`] = runContainCommand;
+    acc[`${commandNames.container}:mount:${key}`] = runInContainerCommand;
+    return acc;
+  }, {});
+}
+
+/**
+ * @param {import('./env.js').INxTargetOptions} options
+ * @returns {import('./env.js').INxTarget}
+ */
+function baseCommand(options) {
   return {
-    [`${commandNames.container}:${commandNames.package.install}`]: {
-      executor: 'nx:run-commands',
-      options: {
-        commands: [
-          `${commandNames.container} run -t ${commandNames.containerImg} nx run ${packageName}:${commandNames.package.emmake} && nx run ${packageName}:${commandNames.package.install}`,
-        ],
-        parallel: false,
-        cwd: '',
-        color: true,
-      },
-    },
-    [`${commandNames.container}:${commandNames.package.emmake}`]: {
-      executor: 'nx:run-commands',
-      options: {
-        commands: [`${commandNames.container} run -t ${commandNames.containerImg} nx run ${packageName}:${commandNames.package.emmake}`],
-        parallel: false,
-        cwd: '',
-        color: true,
-      },
-    },
-    [`${commandNames.container}:${commandNames.package.make}`]: {
-      executor: 'nx:run-commands',
-      options: {
-        commands: [`${commandNames.container} run -t ${commandNames.containerImg} nx run ${packageName}:${commandNames.package.make}`],
-        parallel: false,
-        cwd: '',
-        color: true,
-      },
+    executor: 'nx:run-commands',
+    options: {
+      parallel: false,
+      cwd: '',
+      color: true,
+      ...options,
     },
   };
 }

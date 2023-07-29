@@ -4,106 +4,182 @@
   "sourceRoot": "packages/ffmpeg",
   "tags": [],
   "targets": {
-    "emmake": {
+    "configure": {
+      "dependsOn": [
+        "envJson"
+      ],
       "executor": "nx:run-commands",
       "options": {
-        "commands": [
-          "emconfigure ./configure --disable-x86asm --disable-stripping",
-          "emmake make"
-        ],
         "parallel": false,
         "cwd": "packages/ffmpeg/src",
-        "color": true
+        "color": true,
+        "commands": [
+          "emconfigure ./configure --disable-x86asm --disable-stripping"
+        ]
       }
     },
-    "make": {
+    "emmake": {
+      "dependsOn": [
+        "configure"
+      ],
       "executor": "nx:run-commands",
       "options": {
-        "commands": [
-          "./configure --disable-x86asm --disable-stripping",
-          "make"
-        ],
         "parallel": false,
         "cwd": "packages/ffmpeg/src",
-        "color": true
+        "color": true,
+        "commands": [
+          "emmake make "
+        ]
       }
     },
     "install": {
+      "dependsOn": [
+        "emmake"
+      ],
       "executor": "nx:run-commands",
       "options": {
-        "commands": [
-          "emmake make install"
-        ],
         "parallel": false,
         "cwd": "packages/ffmpeg/src",
-        "color": true
+        "color": true,
+        "commands": [
+          "emmake make install"
+        ]
+      }
+    },
+    "make": {
+      "dependsOn": [
+        "configure"
+      ],
+      "executor": "nx:run-commands",
+      "options": {
+        "parallel": false,
+        "cwd": "packages/ffmpeg/src",
+        "color": true,
+        "commands": [
+          "make"
+        ]
       }
     },
     "repo:update": {
       "executor": "nx:run-commands",
       "options": {
+        "parallel": false,
+        "cwd": "packages/ffmpeg",
+        "color": true,
         "commands": [
           "nx run ffmpeg:repo:update-version",
           "nx run ffmpeg:repo:clone"
-        ],
-        "parallel": false,
-        "cwd": "packages/ffmpeg",
-        "color": true
+        ]
       }
     },
     "repo:update-version": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": [
-          "node ../repo.update-version.js"
-        ],
         "parallel": false,
         "cwd": "packages/ffmpeg",
-        "color": true
+        "color": true,
+        "commands": [
+          "node ../repo.update-version.js"
+        ]
       }
     },
     "repo:clone": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": [
-          "node ../repo.clone.js"
-        ],
         "parallel": false,
         "cwd": "packages/ffmpeg",
-        "color": true
+        "color": true,
+        "commands": [
+          "node ../repo.clone.js"
+        ]
       }
     },
-    "docker:install": {
+    "docker:configure": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": [
-          "docker run -t ffmpeg-wasm nx run ffmpeg:emmake && nx run ffmpeg:install"
-        ],
         "parallel": false,
         "cwd": "",
-        "color": true
+        "color": true,
+        "commands": [
+          "docker run -t ffmpeg-wasm nx run ffmpeg:configure"
+        ]
+      }
+    },
+    "docker:mount:configure": {
+      "executor": "nx:run-commands",
+      "options": {
+        "parallel": false,
+        "cwd": "",
+        "color": true,
+        "commands": [
+          "node shell.run-current-path.js         \"docker         run -v $PWD:/ffmpeg-wasm -t ffmpeg-wasm         find ./packages -type f -exec dos2unix {} + && nx run ffmpeg:configure\""
+        ]
       }
     },
     "docker:emmake": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": [
-          "docker run -t ffmpeg-wasm nx run ffmpeg:emmake"
-        ],
         "parallel": false,
         "cwd": "",
-        "color": true
+        "color": true,
+        "commands": [
+          "docker run -t ffmpeg-wasm nx run ffmpeg:emmake"
+        ]
+      }
+    },
+    "docker:mount:emmake": {
+      "executor": "nx:run-commands",
+      "options": {
+        "parallel": false,
+        "cwd": "",
+        "color": true,
+        "commands": [
+          "node shell.run-current-path.js         \"docker         run -v $PWD:/ffmpeg-wasm -t ffmpeg-wasm         find ./packages -type f -exec dos2unix {} + && nx run ffmpeg:emmake\""
+        ]
+      }
+    },
+    "docker:install": {
+      "executor": "nx:run-commands",
+      "options": {
+        "parallel": false,
+        "cwd": "",
+        "color": true,
+        "commands": [
+          "docker run -t ffmpeg-wasm nx run ffmpeg:install"
+        ]
+      }
+    },
+    "docker:mount:install": {
+      "executor": "nx:run-commands",
+      "options": {
+        "parallel": false,
+        "cwd": "",
+        "color": true,
+        "commands": [
+          "node shell.run-current-path.js         \"docker         run -v $PWD:/ffmpeg-wasm -t ffmpeg-wasm         find ./packages -type f -exec dos2unix {} + && nx run ffmpeg:install\""
+        ]
       }
     },
     "docker:make": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": [
-          "docker run -t ffmpeg-wasm nx run ffmpeg:make"
-        ],
         "parallel": false,
         "cwd": "",
-        "color": true
+        "color": true,
+        "commands": [
+          "docker run -t ffmpeg-wasm nx run ffmpeg:make"
+        ]
+      }
+    },
+    "docker:mount:make": {
+      "executor": "nx:run-commands",
+      "options": {
+        "parallel": false,
+        "cwd": "",
+        "color": true,
+        "commands": [
+          "node shell.run-current-path.js         \"docker         run -v $PWD:/ffmpeg-wasm -t ffmpeg-wasm         find ./packages -type f -exec dos2unix {} + && nx run ffmpeg:make\""
+        ]
       }
     }
   }
